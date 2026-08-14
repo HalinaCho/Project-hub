@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My Project Hub</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+<style>
+  :root {
+    /* 중립색을 전부 인디고 쪽으로 당겨 한 팔레트로 묶는다 */
+    --paper: #FBFBFD;
+    --ink: #16142B;
+    --ink-soft: #6E6A8A;
+    --rule: #E2E0EC;
+
+    --indigo: #4F46E5;
+    --indigo-hover: #5B53EA;
+
+    /* 세 글자는 각각 독립된 물체 — 색조를 하나씩 배정한다 */
+    --glyph-a: #312B9E;
+    --glyph-b: #4338CA;
+    --glyph-c: #4F46E5;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Inter", "Pretendard Variable", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .stage {
+    position: relative;
+    min-height: 100vh;
+    min-height: 100svh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: clamp(26px, 4vh, 56px);
+    padding: clamp(22px, 3.4vw, 52px);
+  }
+
+  /* 도트는 벽지가 아니라 마크가 놓이는 판 — 가운데 띠에만 남긴다 */
+  .field {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background-image: radial-gradient(var(--rule) 1px, transparent 1px);
+    background-size: 26px 26px;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 12%, #000 34%, #000 66%, transparent 88%);
+    mask-image: linear-gradient(to bottom, transparent 12%, #000 34%, #000 66%, transparent 88%);
+    pointer-events: none;
+  }
+
+  .row,
+  .lede {
+    position: relative;
+    z-index: 1;
+  }
+
+  .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+  }
+
+  .row--top {
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .row--bottom {
+    align-items: center;
+    padding-top: 20px;
+    border-top: 1px solid var(--rule);
+  }
+
+  .util {
+    font-size: clamp(10px, 1vw, 12px);
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+
+  .util--name {
+    color: var(--ink);
+  }
+
+  /* 왼쪽 한 축에 붙는 로크업 */
+  .lede {
+    align-self: center;
+    justify-self: start;
+    margin: 0;
+    font-weight: 400;
+  }
+
+  .lede-eyebrow {
+    display: block;
+    margin: 0 0 clamp(10px, 1.5vw, 22px) 2px;
+    font-size: clamp(17px, 2vw, 26px);
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+  }
+
+  .mark {
+    display: block;
+    width: min(76vw, 640px);
+    height: auto;
+  }
+
+  /* 제작 정보 — 타이틀 페이지 하단의 콜로폰 자리 */
+  .colophon {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 7px;
+    text-align: right;
+  }
+
+  .enter-wrap {
+    display: inline-block;
+    /* 버튼 폭 대비 짧게 잡아야 작은 요소에서도 원근이 또렷하다 */
+    perspective: 300px;
+  }
+
+  .enter {
+    display: block;
+    padding: 15px 34px;
+    border-radius: 8px;
+    background: var(--indigo);
+    color: #fff;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  .enter:hover {
+    background: var(--indigo-hover);
+  }
+
+  .enter:focus-visible {
+    outline: 2px solid var(--indigo);
+    outline-offset: 4px;
+  }
+
+  .enter-label {
+    display: inline-block;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  @media (max-width: 560px) {
+    .row--bottom {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 18px;
+    }
+
+    .colophon {
+      align-items: flex-start;
+      text-align: left;
+    }
+  }
+</style>
+</head>
+<body>
+
+  <div class="stage">
+
+    <div class="field" aria-hidden="true"></div>
+
+    <header class="row row--top">
+      <span class="util util--name">Halina Cho</span>
+      <span class="util">2026</span>
+    </header>
+
+    <h1 class="lede">
+      <span class="lede-eyebrow">My Project</span>
+
+      <svg class="mark" viewBox="90 20 382 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+          <!-- 모핑 목적지 글자 -->
+          <g id="letters">
+            <path id="letter-h" d="M90,20 L116,20 L116,67 L174,67 L174,20 L200,20 L200,140 L174,140 L174,93 L116,93 L116,140 L90,140 Z"/>
+            <path id="letter-u" d="M230,20 L256,20 L256,86 C256,106 269,117 285,117 C301,117 314,106 314,86 L314,20 L340,20 L340,86 C340,120 317,140 285,140 C253,140 230,120 230,86 Z"/>
+            <path id="letter-b" d="M375,20 L427,20 C453,20 467,32 467,52 C467,65 460,75 449,79 C463,83 472,94 472,109 C472,128 457,140 429,140 L375,140 Z M401,42 L401,67 L427,67 C438,67 443,62 443,54 C443,46 438,42 427,42 Z M401,92 L401,119 L429,119 C441,119 446,115 446,106 C446,97 441,92 429,92 Z"/>
+          </g>
+        </defs>
+
+        <polygon id="shape-1" fill="var(--glyph-a)" fill-rule="evenodd" points="105,120 145,40 185,120"/>
+        <rect id="shape-2" fill="var(--glyph-b)" fill-rule="evenodd" x="245" y="40" width="80" height="80"/>
+        <circle id="shape-3" fill="var(--glyph-c)" fill-rule="evenodd" cx="423" cy="80" r="40"/>
+      </svg>
+
+      <span class="sr-only">Hub</span>
+    </h1>
+
+    <footer class="row row--bottom">
+      <span class="enter-wrap">
+        <a class="enter" href="project.html"><span class="enter-label">Enter <span aria-hidden="true">→</span></span></a>
+      </span>
+      <div class="colophon">
+        <span class="util">Web · App · Design</span>
+        <span class="util">Vibe coded with Claude Code</span>
+      </div>
+    </footer>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/MorphSVGPlugin.min.js"></script>
+  <script>
+    gsap.registerPlugin(MorphSVGPlugin);
+    MorphSVGPlugin.convertToPath("polygon, rect, circle");
+
+    const shapes = ["#shape-1", "#shape-2", "#shape-3"];
+    const letters = ["#letter-h", "#letter-u", "#letter-b"];
+    // 도형 원본 패스: 마크에 호버했을 때 되돌릴 대상
+    const shapeD = shapes.map(s => document.querySelector(s).getAttribute("d"));
+
+    const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    /* ---- 도형이 무대에 먼저 서 있고, 액자가 짜인 뒤 이름으로 굳는다 ---- */
+
+    function morphTo(targets) {
+      shapes.forEach((s, i) => gsap.to(s, {
+        morphSVG: targets[i],
+        duration: 0.45,
+        delay: i * 0.06,
+        ease: "power2.inOut",
+        overwrite: true
+      }));
+    }
+
+    // 마크에 올리면 이름이 다시 도형으로 풀린다
+    function enableHoverMorph() {
+      const mark = document.querySelector(".mark");
+      mark.addEventListener("pointerenter", () => morphTo(shapeD));
+      mark.addEventListener("pointerleave", () => morphTo(letters));
+    }
+
+    if (reduceMotion) {
+      shapes.forEach((s, i) => gsap.set(s, { morphSVG: letters[i] }));
+    } else {
+      gsap.set(".enter-wrap", { opacity: 0 });
+
+      gsap.timeline({ defaults: { ease: "power2.inOut" }, onComplete: enableHoverMorph })
+        // 액자부터 짜인다
+        .from(".row--top, .lede-eyebrow", { y: 12, opacity: 0, duration: 0.7, stagger: 0.1, ease: "power2.out" }, 0.15)
+        // 도형이 이름으로 굳는다
+        .to(shapes[0], { morphSVG: letters[0] }, 0.8)
+        .to(shapes[1], { morphSVG: letters[1] })
+        .to(shapes[2], { morphSVG: letters[2] })
+        // 마지막으로 Enter가 아래로 내려온다
+        .fromTo(".enter-wrap", { y: -28 }, { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" }, "+=0.15");
+    }
+
+    /* ---- Enter 버튼: 커서를 따라가는 원근 틸트 ---- */
+
+    if (!reduceMotion) {
+      const btn = document.querySelector(".enter");
+      const label = document.querySelector(".enter-label");
+
+      const rotX = gsap.quickTo(btn, "rotationX", { ease: "power3" });
+      const rotY = gsap.quickTo(btn, "rotationY", { ease: "power3" });
+      const labelX = gsap.quickTo(label, "x", { ease: "power3" });
+      const labelY = gsap.quickTo(label, "y", { ease: "power3" });
+
+      btn.addEventListener("pointermove", (e) => {
+        const r = btn.getBoundingClientRect();
+        const px = (e.clientX - r.left) / r.width;
+        const py = (e.clientY - r.top) / r.height;
+
+        rotX(gsap.utils.interpolate(15, -15, py));
+        rotY(gsap.utils.interpolate(-15, 15, px));
+        labelX(gsap.utils.interpolate(-10, 10, px));
+        labelY(gsap.utils.interpolate(-4, 4, py));
+      });
+
+      btn.addEventListener("pointerleave", () => {
+        rotX(0);
+        rotY(0);
+        labelX(0);
+        labelY(0);
+      });
+    }
+  </script>
+
+</body>
+</html>

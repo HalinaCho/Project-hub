@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Projects — My Project Hub</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+<style>
+  :root {
+    --paper: #FBFBFD;
+    --ink: #16142B;
+    --ink-soft: #6E6A8A;
+    --rule: #E2E0EC;
+
+    --indigo: #4F46E5;
+    --indigo-hover: #5B53EA;
+
+    --card-w: 300px;
+    --card-h: 404px;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Inter", "Pretendard Variable", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+
+  .stage {
+    height: 100vh;
+    height: 100svh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: clamp(18px, 3vh, 36px);
+    padding: clamp(22px, 3.4vw, 52px);
+  }
+
+  .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .row--top {
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .row--bottom {
+    padding-top: 18px;
+    border-top: 1px solid var(--rule);
+  }
+
+  .util {
+    font-size: clamp(10px, 1vw, 12px);
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+
+  a.util {
+    color: var(--ink);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  a.util:hover { color: var(--indigo); }
+
+  /* ---- 카드 무대 ---- */
+
+  .deck {
+    position: relative;
+    overflow: hidden;
+    perspective: 1600px;
+    touch-action: pan-y;
+    cursor: grab;
+    user-select: none;
+  }
+
+  .deck:active { cursor: grabbing; }
+
+  .card {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: var(--card-w);
+    height: var(--card-h);
+    margin: calc(var(--card-h) / -2) 0 0 calc(var(--card-w) / -2);
+    border-radius: 14px;
+    /* 3D 컨텍스트에서는 overflow:hidden이 자식을 못 자르므로 clip-path로 자른다 */
+    clip-path: inset(0 round 14px);
+    background: #EDECF4;
+    box-shadow: 0 20px 44px rgba(22, 20, 43, 0.13);
+    text-decoration: none;
+    color: inherit;
+    will-change: transform;
+    /* 링크의 네이티브 드래그가 캐러셀 드래그를 가로채지 않도록 */
+    -webkit-user-drag: none;
+  }
+
+  .card:focus-visible {
+    outline: 2px solid var(--indigo);
+    outline-offset: 3px;
+  }
+
+  .card-thumb {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background-size: cover;
+    background-position: center;
+    font-size: 96px;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    color: rgba(255, 255, 255, 0.9);
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .card:hover .card-thumb { transform: scale(1.06); }
+
+  .card-body {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 18px 20px 20px;
+    background: var(--paper);
+    border-top: 1px solid var(--rule);
+  }
+
+  .card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .badge {
+    padding: 4px 9px;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+  }
+
+  .badge--in_progress { background: #EDEDFD; color: var(--indigo); }
+  .badge--completed   { background: #EEEEF3; color: var(--ink-soft); }
+  .badge--on_hold     { background: #F8F1DF; color: #8A6D25; }
+
+  .card-cat {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  .card-name {
+    margin: 0 0 6px;
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+  }
+
+  .card-desc {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+  }
+
+  .card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin: 12px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .card-tags li {
+    padding: 3px 8px;
+    border: 1px solid var(--rule);
+    border-radius: 5px;
+    font-size: 11px;
+    color: var(--ink-soft);
+  }
+
+  .card-dates {
+    margin: 12px 0 0;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--ink-soft);
+  }
+
+  /* ---- 조작부 ---- */
+
+  .controls {
+    display: flex;
+    gap: 8px;
+  }
+
+  .nav {
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    background: transparent;
+    color: var(--ink);
+    font-family: inherit;
+    font-size: 17px;
+    line-height: 1;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  }
+
+  .nav:hover {
+    background: var(--indigo);
+    border-color: var(--indigo);
+    color: #fff;
+  }
+
+  .nav:focus-visible {
+    outline: 2px solid var(--indigo);
+    outline-offset: 3px;
+  }
+
+  @media (max-width: 700px) {
+    :root {
+      --card-w: 244px;
+      --card-h: 400px;
+    }
+
+    .card-thumb { font-size: 72px; }
+    .card-name { font-size: 17px; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="stage">
+
+    <header class="row row--top">
+      <a class="util" href="index.html">← Hub</a>
+      <span class="util" id="counter">01 / 08</span>
+    </header>
+
+    <section class="deck" id="deck" aria-label="프로젝트 목록"></section>
+
+    <footer class="row row--bottom">
+      <div class="controls">
+        <button class="nav" id="prev" type="button" aria-label="이전 프로젝트">‹</button>
+        <button class="nav" id="next" type="button" aria-label="다음 프로젝트">›</button>
+      </div>
+      <span class="util">Drag · Scroll · ← →</span>
+    </footer>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/Draggable.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/InertiaPlugin.min.js"></script>
+  <script>
+    /* =========================================================
+       프로젝트 데이터 — 여기만 고치면 됩니다.
+       link: 카드 클릭 시 새 탭으로 열릴 대표 링크 (지금은 전부 임시값)
+       thumbnail: 비워두면 인디고 색면 + 번호가 대신 들어갑니다
+       status: in_progress | completed | on_hold
+       ========================================================= */
+    const projects = [
+      { id: "p1", name: "Moodboard Kit", description: "이미지를 끌어다 무드보드를 빠르게 짜는 웹 툴.",
+        thumbnail: "", status: "in_progress", techStack: ["React", "TypeScript", "Vite"],
+        startDate: "2025-11", endDate: null, category: "웹", link: "https://github.com" },
+
+      { id: "p2", name: "Daily Log", description: "하루 기록을 카드로 쌓아두는 개인 저널.",
+        thumbnail: "", status: "completed", techStack: ["React Native", "Expo"],
+        startDate: "2025-04", endDate: "2025-08", category: "앱", link: "https://github.com" },
+
+      { id: "p3", name: "Type Scale Lab", description: "타이포 스케일을 실시간으로 굴려보는 실험실.",
+        thumbnail: "", status: "completed", techStack: ["Vanilla JS", "CSS"],
+        startDate: "2024-11", endDate: "2025-01", category: "웹", link: "https://github.com" },
+
+      { id: "p4", name: "Recipe Shelf", description: "자주 만드는 요리를 모아둔 레시피 아카이브.",
+        thumbnail: "", status: "on_hold", techStack: ["Next.js", "Supabase"],
+        startDate: "2025-02", endDate: null, category: "웹", link: "https://github.com" },
+
+      { id: "p5", name: "Grid Poster", description: "그리드 규칙만으로 포스터를 뽑아내는 생성 실험.",
+        thumbnail: "", status: "completed", techStack: ["p5.js"],
+        startDate: "2024-08", endDate: "2024-09", category: "디자인", link: "https://github.com" },
+
+      { id: "p6", name: "Focus Timer", description: "뽀모도로에 기록을 붙인 집중 타이머.",
+        thumbnail: "", status: "in_progress", techStack: ["Svelte", "IndexedDB"],
+        startDate: "2026-01", endDate: null, category: "앱", link: "https://github.com" },
+
+      { id: "p7", name: "Color Notes", description: "사진에서 팔레트를 뽑아 메모처럼 저장.",
+        thumbnail: "", status: "completed", techStack: ["Python", "Flask"],
+        startDate: "2024-05", endDate: "2024-07", category: "웹", link: "https://github.com" },
+
+      { id: "p8", name: "Icon Draft", description: "아이콘 초안을 SVG로 바로 스케치하는 도구.",
+        thumbnail: "", status: "on_hold", techStack: ["SVG", "GSAP"],
+        startDate: "2025-06", endDate: null, category: "디자인", link: "https://github.com" }
+    ];
+
+    /* ---- 카드 만들기 ---- */
+
+    const STATUS_LABEL = { in_progress: "진행중", completed: "완료", on_hold: "보류" };
+    const TINTS = ["#4F46E5", "#3B34B0", "#6366F1", "#2E2880", "#5B53EA", "#312B9E", "#7079F3", "#4338CA"];
+
+    const pad = n => String(n).padStart(2, "0");
+    const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+    const period = p => {
+      const end = p.endDate ? p.endDate.replace("-", ".") : (p.status === "in_progress" ? "진행 중" : "미정");
+      return p.startDate.replace("-", ".") + " — " + end;
+    };
+
+    const deck = document.getElementById("deck");
+    const counter = document.getElementById("counter");
+
+    projects.forEach((p, i) => {
+      const card = document.createElement("a");
+      card.className = "card";
+      card.href = p.link;
+      card.target = "_blank";
+      card.rel = "noopener noreferrer";
+      card.draggable = false;
+      card.dataset.index = i;
+      card.innerHTML =
+        '<div class="card-thumb" style="' +
+          (p.thumbnail ? "background-image:url(" + esc(p.thumbnail) + ")" : "background:" + TINTS[i % TINTS.length]) +
+        '">' + (p.thumbnail ? "" : pad(i + 1)) + '</div>' +
+        '<div class="card-body">' +
+          '<div class="card-meta">' +
+            '<span class="badge badge--' + p.status + '">' + STATUS_LABEL[p.status] + '</span>' +
+            '<span class="card-cat">' + esc(p.category) + '</span>' +
+          '</div>' +
+          '<h2 class="card-name">' + esc(p.name) + '</h2>' +
+          '<p class="card-desc">' + esc(p.description) + '</p>' +
+          '<ul class="card-tags">' + p.techStack.map(t => '<li>' + esc(t) + '</li>').join("") + '</ul>' +
+          '<p class="card-dates">' + esc(period(p)) + '</p>' +
+        '</div>';
+      deck.appendChild(card);
+    });
+
+    /* ---- 무한 캐러셀 ----
+       position은 정수 = 그 인덱스의 카드가 중앙. 무한히 커지거나 작아질 수 있고,
+       각 카드는 position과의 '원형 최단거리'로 자리를 잡으므로 자연히 순환한다. */
+
+    const cards = gsap.utils.toArray(".card");
+    const N = cards.length;
+    const half = N / 2;
+    const state = { position: 0 };
+    const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    let spacing = 0;
+    let dragged = false;
+
+    function measure() {
+      spacing = cards[0].offsetWidth * 0.82;
+    }
+
+    function render() {
+      cards.forEach((card, i) => {
+        const d = gsap.utils.wrap(-half, half, i - state.position);
+        const ad = Math.abs(d);
+        const opacity = gsap.utils.clamp(0, 1, 1 - (ad - 1.5) * 0.5);
+
+        gsap.set(card, {
+          x: Math.sign(d) * Math.pow(ad, 0.82) * spacing,
+          scale: Math.max(1 - ad * 0.15, 0.35),
+          rotationY: -d * 6,
+          opacity: opacity,
+          zIndex: Math.round(500 - ad * 100),
+          pointerEvents: opacity < 0.15 ? "none" : "auto"
+        });
+
+        // 본문은 중앙에 왔을 때만 올라온다
+        const reveal = gsap.utils.clamp(0, 1, 1 - ad * 1.6);
+        gsap.set(card.querySelector(".card-body"), {
+          yPercent: (1 - reveal) * 100,
+          opacity: reveal
+        });
+      });
+
+      counter.textContent = pad(gsap.utils.wrap(0, N, Math.round(state.position)) + 1) + " / " + pad(N);
+    }
+
+    function setPosition(v) {
+      state.position = v;
+      render();
+    }
+
+    function goTo(target) {
+      gsap.to(state, {
+        position: target,
+        duration: reduceMotion ? 0.15 : 0.65,
+        ease: "power3.out",
+        overwrite: true,
+        onUpdate: render
+      });
+    }
+
+    // 화면상 어느 카드든 가장 가까운 방향으로 중앙에 가져온다
+    function centerIndex(i) {
+      goTo(state.position + gsap.utils.wrap(-half, half, i - state.position));
+    }
+
+    measure();
+    render();
+
+    /* ---- 드래그 (관성 + 스냅) ---- */
+
+    gsap.registerPlugin(Draggable, InertiaPlugin);
+
+    const proxy = document.createElement("div");
+
+    Draggable.create(proxy, {
+      type: "x",
+      trigger: deck,
+      inertia: true,
+      snap: { x: v => Math.round(v / spacing) * spacing },
+      onPress() {
+        gsap.killTweensOf(state);
+        gsap.set(proxy, { x: -state.position * spacing });
+        dragged = false;
+      },
+      onDrag() {
+        dragged = true;
+        setPosition(-this.x / spacing);
+      },
+      onThrowUpdate() {
+        setPosition(-this.x / spacing);
+      },
+      onThrowComplete() {
+        setPosition(Math.round(state.position));
+      }
+    });
+
+    /* ---- 클릭: 중앙 카드만 링크로, 나머지는 중앙으로 ---- */
+
+    deck.addEventListener("click", (e) => {
+      const card = e.target.closest(".card");
+      if (!card) return;
+
+      if (dragged) {
+        e.preventDefault();
+        return;
+      }
+
+      const i = Number(card.dataset.index);
+      if (i !== gsap.utils.wrap(0, N, Math.round(state.position))) {
+        e.preventDefault();
+        centerIndex(i);
+      }
+    });
+
+    // 키보드로 카드를 넘겨받으면 그 카드를 중앙으로
+    cards.forEach((card, i) => {
+      card.addEventListener("focus", () => centerIndex(i));
+    });
+
+    /* ---- 휠 · 버튼 · 화살표 키 ---- */
+
+    let wheelAcc = 0;
+    let wheelTimer;
+
+    deck.addEventListener("wheel", (e) => {
+      e.preventDefault();
+      wheelAcc += Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+
+      if (Math.abs(wheelAcc) >= 50) {
+        goTo(Math.round(state.position) + Math.sign(wheelAcc));
+        wheelAcc = 0;
+      }
+
+      clearTimeout(wheelTimer);
+      wheelTimer = setTimeout(() => { wheelAcc = 0; }, 160);
+    }, { passive: false });
+
+    document.getElementById("prev").addEventListener("click", () => goTo(Math.round(state.position) - 1));
+    document.getElementById("next").addEventListener("click", () => goTo(Math.round(state.position) + 1));
+
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") goTo(Math.round(state.position) + 1);
+      else if (e.key === "ArrowLeft") goTo(Math.round(state.position) - 1);
+    });
+
+    window.addEventListener("resize", () => {
+      measure();
+      render();
+    });
+
+    /* ---- 등장 ---- */
+
+    // 카드 개별 opacity는 render()가 관리하므로, 등장은 덱 전체에만 건다
+    if (!reduceMotion) {
+      gsap.from(deck, { y: 18, opacity: 0, duration: 0.75, ease: "power2.out" });
+    }
+  </script>
+
+</body>
+</html>
